@@ -255,14 +255,16 @@ data directory:   ${path.resolve(this.userDataDir)}
 ----------------`);
         if (this.isFirstRun) {
             const qrCodePath = path.join(this.userDataDir, 'qrcode.png');
+            // Increase timeout to 30 seconds for better reliability
             await this.bot.qrCodeLogin((url, png) => {
                 fs.writeFileSync(qrCodePath, png);
                 this.logger.info('Please scan the QR code below to login:');
-                generate(url, { small: true, qrErrorCorrectLevel: QRErrorCorrectLevel.L });
+                // Use larger QR code with higher error correction for better scanning
+                generate(url, { small: false, qrErrorCorrectLevel: QRErrorCorrectLevel.M });
                 this.logger.info(`QR code image saved to ${path.resolve(qrCodePath)}.`);
                 this.logger.info('Or you can generate a QR code with the following URL:');
                 this.logger.info(url);
-            });
+            }, 30000); // 30 seconds timeout
         } else {
             await this.bot.fastLogin();
         }

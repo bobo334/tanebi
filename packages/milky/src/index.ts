@@ -32,6 +32,7 @@ import { GroupApi } from '@/api/group';
 import { FileApi } from '@/api/file';
 import { appName, appVersion, coreVersion } from '@/constants';
 import { MilkyWebhookHandler } from '@/network/webhook';
+import { MilkyOneBotHandler } from '@/network/onebot';
 import { milkyPackageVersion, milkyVersion } from '@saltify/milky-types';
 
 export class MilkyApp {
@@ -45,6 +46,7 @@ export class MilkyApp {
     ]);
     readonly httpHandler;
     readonly webhookHandler;
+    readonly onebotHandler;
 
     private constructor(
         readonly userDataDir: string,
@@ -100,6 +102,7 @@ export class MilkyApp {
 
         this.httpHandler = new MilkyHttpHandler(this, this.config.milky.http);
         this.webhookHandler = new MilkyWebhookHandler(this, this.config.milky.webhook);
+        this.onebotHandler = new MilkyOneBotHandler(this, this.config.milky.onebot);
 
         this.configureEventLogging();
     }
@@ -229,6 +232,7 @@ export class MilkyApp {
         });
         this.httpHandler.broadcast(eventString);
         this.webhookHandler.broadcast(eventString);
+        this.onebotHandler.broadcast(eventString);
     }
 
     async start() {
@@ -264,11 +268,13 @@ data directory:   ${path.resolve(this.userDataDir)}
         }
 
         this.httpHandler.start();
+        await this.onebotHandler.start();
         configureEventTransformation(this);
     }
 
     async stop() {
         this.httpHandler.stop();
+        this.onebotHandler.stop();
         await this.bot.dispose();
     }
 

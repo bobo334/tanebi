@@ -24,6 +24,9 @@
     "sea": "node scripts/sea.js",
     "prepack": "npm run build"
   },
+  "dependencies": {
+    "ws": "^8.18.0"
+  },
   "devDependencies": {
     "@hono/node-server": "^1.19.1",
     "@hono/node-ws": "^1.2.0",

@@ -36,6 +36,10 @@ export const zConfig = z.object({
         webhook: z.object({
             urls: z.array(z.string().url()),
         }),
+        onebot: z.object({
+            urls: z.array(z.string().url()),
+            heartbeatInterval: z.number().int().min(1000).max(60000).default(5000),
+        }),
     }),
 });
 
@@ -66,6 +70,10 @@ export const exampleConfig: Config = {
         },
         webhook: {
             urls: []
+        },
+        onebot: {
+            urls: [],
+            heartbeatInterval: 5000
         }
     }
 };

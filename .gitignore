@@ -121,3 +121,5 @@ pnpm-lock.yaml
 
 # Turbo cache
 .turbo/
+
+.qoder/
